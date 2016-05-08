@@ -3,10 +3,10 @@
  * Author: Mike Swift <theycallmeswift@gmail.com>
  * Date Created: April 28th, 2011
  * Date Modified: April 28th, 2011
- * 
- * This is a program that simulates a cache using a trace file 
+ *
+ * This is a program that simulates a cache using a trace file
  * and either a write through or write back policy.
- * 
+ *
  * Usage: Usage: ./sim [-h] <write policy> <trace file>
  *
  * <write policy> is one of:
@@ -15,33 +15,32 @@
  *
  * <trace file> is the name of a file that contains a memory access trace.
  */
- 
+
 #ifndef SWIFT_SIM_H_
 #define SWIFT_SIM_H_
 
-/* Constants 
+/* Constants
  *
- * Both CACHE_SIZE and BLOCK_SIZE are in bytes. We can calculate the number 
+ * Both CACHE_SIZE and BLOCK_SIZE are in bytes. We can calculate the number
  * of lines in the cache with CACHE_SIZE / BLOCK_SIZE.
- * 
+ *
  * Ex. 16kb / 4 Bytes = 4096 Lines
  */
 
 /* Print Debug Messages */
-#define DEBUG 0
+#define DEBUG 1
 
 /* Max Line Length in Trace */
-#define LINELENGTH 128
+#define LINELENGTH 16
 
 /* Cache Sizes (in bytes) */
-#define CACHE_SIZE 16384
-#define BLOCK_SIZE 4
+#define CACHE_SIZE 32
+#define BLOCK_SIZE 8
 
 /* Block Sizes */
-#define TAG 18 /* 18 + 0 = 18 */
-#define INDEX 12 /* 18 + 12 = 30 */
-#define OFFSET 2 /* 30 + 2 = 32 */
-
+#define TAG 0 /* 2-1=1*/
+#define INDEX 2 /* cause there are 2 blocks */
+#define OFFSET 0 /* Assume to be zero */
 
 /* Typedefs */
 typedef struct Cache_* Cache;
@@ -60,12 +59,12 @@ typedef struct Block_* Block;
  * @return  success         new Cache
  * @return  failure         NULL
  */
- 
+
 Cache createCache(int cache_size, int block_size, int write_policy);
 
 /* destroyCache
- * 
- * Function that destroys a created cache. Frees all allocated memory. If 
+ *
+ * Function that destroys a created cache. Frees all allocated memory. If
  * you pass in NULL, nothing happens. So make sure to set your cache = NULL
  * after you destroy it to prevent a double free.
  *
@@ -73,13 +72,13 @@ Cache createCache(int cache_size, int block_size, int write_policy);
  *
  * @return  void
  */
- 
+
 void destroyCache(Cache cache);
 
 /* readFromCache
  *
  * Function that reads data from a cache. Returns 0 on failure
- * or 1 on success. 
+ * or 1 on success.
  *
  * @param       cache       target cache struct
  * @param       address     hexidecimal address
